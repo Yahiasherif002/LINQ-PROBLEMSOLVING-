@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -504,9 +505,172 @@ namespace D10
 
             //foreach ( var num in result) { Console.WriteLine(num); }
 
-            #endregion   
+            #endregion
             #endregion
 
+            #region LINQ - Projection Operators
+        /*LINQ - Projection Operators
+
+                Use ListGenerators.cs & Customers.xml
+                1.Return a sequence of just the names of a list of products.
+                2.Produce a sequence of the uppercase and lowercase versions of each word in the original array(Anonymous Types).
+                  string[] words = { "aPPLE", "BlUeBeRrY", "cHeRry" };
+
+            Use ListGenerators.cs & Customers.xml
+                3.Produce a sequence containing some properties of Products, including UnitPrice which is renamed to Price in the resulting type.
+                4.Determine if the value of ints in an array match their position in the array.
+                    int[] Arr = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            Result
+            Number: In - place ?
+            5 : False
+                4: False
+                1: False
+                3: True
+                9: False
+                8: False
+                6: True
+                7: True
+                2: False
+                0: False
+
+                5.Returns all pairs of numbers from both arrays such that the number from numbersA is less than the number from numbersB.
+                int[] numbersA = { 0, 2, 4, 5, 6, 8, 9 };
+            int[] numbersB = { 1, 3, 5, 7, 8 };
+            Result
+            Pairs where a<b:
+                0 is less than 1
+                0 is less than 3
+                0 is less than 5
+                0 is less than 7
+                0 is less than 8
+                2 is less than 3
+                2 is less than 5
+                2 is less than 7
+                2 is less than 8
+                4 is less than 5
+                4 is less than 7
+                4 is less than 8
+                5 is less than 7
+                5 is less than 8
+                6 is less than 7
+                6 is less than 8
+
+                Use ListGenerators.cs & Customers.xml
+                6.Select all orders where the order total is less than 500.00.
+                7.Select all orders where the order was made in 1998 or later.
+*/
+
+            #region 1. Return a sequence of just the names of a list of products.
+            //var names = ProductList.Select(x => x.ProductName);
+            //foreach (var name in names) { Console.WriteLine(name); }
+            #endregion
+
+            #region 2. Produce a sequence of the uppercase and lowercase versions of each word in the original array (Anonymous Types).
+            //string[] words = { "aPPLE", "BlUeBeRrY", "cHeRry" };
+
+            //var bothVersions = words.Select(x => new { uppercase = x.ToUpper(), lowercase = x.ToLower() });
+
+            //foreach (var bothVersion in bothVersions) { Console.WriteLine(bothVersion); }
+
+            #endregion
+
+            #region 3. Produce a sequence containing some properties of Products, including UnitPrice which is renamed to Price in the resulting type.
+            //var prodInfo = ProductList.Select(x => new { x.ProductID, x.ProductName, x.UnitsInStock, x.Category, price = x.UnitPrice.ToString("C") });
+
+            //foreach (var prod in prodInfo) { Console.WriteLine(prod); }
+            #endregion
+
+            #region 4. Determine if the value of ints in an array match their position in the array.
+            //int[] Arr = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+
+            //var isInPalce = Arr.Select((x, i) => new { Number = x, inPlace = x == i });
+
+            //foreach (var item in isInPalce) { Console.WriteLine(item); }
+
+            #endregion
+
+            #region 5. Returns all pairs of numbers from both arrays such that the number from numbersA is less than the number from numbersB.
+            //int[] numbersA = { 0, 2, 4, 5, 6, 8, 9 };
+            //int[] numbersB = { 1, 3, 5, 7, 8 };
+
+            //var pairs=from A in numbersA
+            //          from B in numbersB
+            //          where A < B
+            //          select new { A, B };
+
+            //foreach( var pair in pairs ) { Console.WriteLine(pair); }
+            #endregion
+
+            #region 6.Select all orders where the order total is less than 500.00.
+
+            //var products = CustomerList.SelectMany(c => c.Orders)
+            //                         .Where(o => o.Total < 500.00m);
+
+            //foreach (var product in products) { Console.WriteLine(product); }
+
+            #endregion
+
+            #region  7. Select all orders where the order was made in 1998 or later.
+
+            //var products = CustomerList.SelectMany(c => c.Orders)
+            //                         .Where(c => c.OrderDate.Year >= 1998).Select(c => new { c.OrderID, c.OrderDate });
+
+            //foreach(var product in products) { Console.WriteLine(product); }
+
+            #endregion
+            #endregion
+
+            #region LINQ - Quantifiers
+            /*LINQ - Quantifiers
+                    Use ListGenerators.cs & Customers.xml
+                    2.Return a grouped a list of products only for categories that have at least one product that is out of stock.
+                    3.Return a grouped a list of products only for categories that have all of their products in stock.*/
+
+            #region   2.Return a grouped a list of products only for categories that have at least one product that is out of stock.
+            //var atLeastAny = ProductList.GroupBy(c => c.Category)
+            //                           .Where(Group => Group.Any(c => c.UnitsInStock == 0))
+            //                           .Select( cg=> new
+            //                           {
+            //                               category=cg.Key,
+            //                               products=cg
+            //                           });
+
+            //foreach (var product in atLeastAny) 
+            //{
+            //    Console.WriteLine($"Category: {product.category}");
+
+            //    foreach (var prod in product.products)
+            //    {
+            //        Console.WriteLine($"  Product: {prod.ProductName}, Units In Stock: {prod.UnitsInStock}");
+
+            //    }
+
+            //}
+            #endregion
+
+            #region  3.Return a grouped a list of products only for categories that have all of their products in stock.
+            //var All = ProductList.GroupBy(c => c.Category)
+            //               .Where(Group => Group.All(c => c.UnitsInStock != 0))
+            //               .Select(cg => new
+            //               {
+            //                   category = cg.Key,
+            //                   products = cg
+            //               });
+
+            //foreach (var product in All)
+            //{
+            //    Console.WriteLine($"Category: {product.category}");
+
+            //    foreach (var prod in product.products)
+            //    {
+            //        Console.WriteLine($"  Product: {prod.ProductName}, Units In Stock: {prod.UnitsInStock}");
+
+            //    }
+
+            //}
+
+            #endregion 
+            #endregion
         }
 
 
