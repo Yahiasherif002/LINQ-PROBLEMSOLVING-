@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using static D10.ListGenerators;
 
 namespace D10
@@ -66,12 +67,15 @@ namespace D10
             //foreach(var unit in discountedlist2) { Console.WriteLine(unit); };
             #endregion
 
+            //========================================================================
+
+            #region LINQ - Restriction Operators
             /*
-             Use ListGenerators.cs & Customers.xml
-                1. Find all products that are out of stock.
-                2. Find all products that are in stock and cost more than 3.00 per unit.
-                3. Returns digits whose name is shorter than their value.
-             */
+                 Use ListGenerators.cs & Customers.xml
+                    1. Find all products that are out of stock.
+                    2. Find all products that are in stock and cost more than 3.00 per unit.
+                    3. Returns digits whose name is shorter than their value.
+                 */
 
             #region 1- Find all products that are out of stock.
             //var outOfStock = ProductList.Where(p => p.UnitsInStock == 0).Select(x=>new {id= x.ProductID , name=x.ProductName});
@@ -104,7 +108,10 @@ namespace D10
             //}
 
             #endregion
+            #endregion
 
+
+            #region LINQ - Element Operators
 
             //1.Get first Product out of Stock
             //2.Return the first product whose Price > 1000, unless there is no match, in which case null is returned.
@@ -141,6 +148,8 @@ namespace D10
             //Console.WriteLine($"Num is : {result}");
 
             #endregion
+            #endregion
+
 
             #region   LINQ - Set Operators
             /*
@@ -208,7 +217,7 @@ namespace D10
             #endregion
 
 
-
+            #region LINQ - Aggregate Operators
             //LINQ - Aggregate Operators
 
             //    1.Uses Count to get the number of odd numbers in the array
@@ -337,12 +346,165 @@ namespace D10
 
             #region 14.Get the average price of each category's products.
 
-            var average = from products in ProductList
-                          group products by products.Category into g
-                          let averagePrice = g.Average(a => a.UnitPrice)
-                          select new { category = g.Key, averagePrice = averagePrice.ToString("C") };
-            foreach (var product in average) { Console.WriteLine(product); }
+            //var average = from products in ProductList
+            //              group products by products.Category into g
+            //              let averagePrice = g.Average(a => a.UnitPrice)
+            //              select new { category = g.Key, averagePrice = averagePrice.ToString("C") };
+            //foreach (var product in average) { Console.WriteLine(product); }
 
+            #endregion
+            #endregion
+
+
+            #region LINQ - Ordering Operators
+            /*LINQ - Ordering Operators
+
+               Use ListGenerators.cs & Customers.xml
+                   1.Sort a list of products by name
+                   2.Uses a custom comparer to do a case -insensitive sort of the words in an array.
+                   string[] Arr = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+
+                   Use ListGenerators.cs & Customers.xml
+                   3.Sort a list of products by units in stock from highest to lowest.
+                   4.Sort a list of digits, first by length of their name, and then alphabetically by the name itself.
+                   string[] Arr = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+                   5.Sort first by word length and then by a case -insensitive sort of the words in an array.
+                   string[] words = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+
+                   Use ListGenerators.cs & Customers.xml
+                   6.Sort a list of products, first by category, and then by unit price, from highest to lowest.
+                   7.Sort first by word length and then by a case -insensitive descending sort of the words in an array.
+                   string[] Arr = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+                   8.Create a list of all digits in the array whose second letter is 'i' that is reversed from the order in the original array.
+                   string[] Arr = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" }; */
+
+            #region  1. Sort a list of products by name
+            //var sortedProducts = ProductList.OrderBy(p => p.ProductName);
+            //foreach (var product in sortedProducts) { Console.WriteLine(product); }
+            #endregion
+
+            #region  2. Uses a custom comparer to do a case-insensitive sort of the words in an array.
+            //string[] Arr = { "aPPLE", "AbAcUs", "zRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+
+            //var sorted = Arr.OrderBy(a => a, StringComparer.OrdinalIgnoreCase);
+            //foreach ( var item in sorted) { Console.WriteLine(item); }
+            #endregion
+
+            #region  3. Sort a list of products by units in stock from highest to lowest.
+            //var SortedUnits = ProductList.OrderByDescending(p => p.UnitsInStock);
+            //foreach (var Unit in SortedUnits) { Console.WriteLine(Unit); }
+            #endregion
+
+            #region 4. Sort a list of digits, first by length of their name, and then alphabetically by the name itself.
+            //string[] Arr = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+
+            //var sortedDigit = Arr.OrderBy(A => A.Length).ThenBy(A => A);
+            //foreach (var digit in sortedDigit) { Console.WriteLine(digit); }
+            #endregion
+
+            #region 5. Sort first by word length and then by a case-insensitive sort of the words in an array.
+            //string[] words = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY","zRi", "ClOvEr", "cHeRry","apbl" };
+
+            //var sortedWord1 = words.OrderBy(x => x.Length).ThenBy(x => x, StringComparer.OrdinalIgnoreCase);
+
+
+
+            //var sortedWord = from word in words
+            //                orderby word.Length , StringComparer.OrdinalIgnoreCase
+            //                select word;
+
+            //foreach ( var word in sortedWord1 ) { Console.WriteLine(word); }
+
+            #endregion
+
+            #region 6. Sort a list of products, first by category, and then by unit price, from highest to lowest.
+
+            //var sortedStuff= from product in ProductList
+            //                 orderby product.Category,product.UnitPrice descending
+            //                 select new { category = product.Category, product.UnitPrice};
+            //foreach (var item in sortedStuff) { Console.WriteLine(item); }
+
+            #endregion
+
+            #region 7. Sort first by word length and then by a case-insensitive descending sort of the words in an array.
+            //string[] Arr = { "aPPLE", "AbAcUs", "bRaNcH", "BlUeBeRrY", "ClOvEr", "cHeRry" };
+
+            //var DSort = Arr.OrderBy(x => x.Length).ThenByDescending(x => x, StringComparer.OrdinalIgnoreCase);
+
+            //foreach ( var x in Arr) { Console.WriteLine(x); }
+
+            #endregion
+
+            #region  8. Create a list of all digits in the array whose second letter is 'i' that is reversed from the order in the original array.
+            //string[] Arr = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+
+            //var FR = Arr.Where(A => A.Length > 1 && A[1] == 'i').Reverse();
+
+            //foreach ( var A in FR ) { Console.WriteLine(A); }
+
+            #endregion
+            #endregion
+
+
+            #region LINQ - Partitioning Operators
+            /*LINQ - Partitioning Operators
+
+                Use ListGenerators.cs & Customers.xml
+                1.Get the first 3 orders from customers in Stavern
+                2.Get all but the first 2 orders from customers in Stavern.
+                3.Return elements starting from the beginning of the array until a number is hit that is less than its position in the array.
+                  int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+                4.Get the elements of the array starting from the first element divisible by 3.
+                    int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+                5.Get the elements of the array starting from the first element less than its position.
+                    int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };*/
+
+            #region  1.Get the first 3 orders from customers in Stavern
+
+            //var first3orders =CustomerList.Where(c=>c.City== "Stavern")
+            //                             .SelectMany(c=>c.Orders)
+            //                             .Take(3)
+            //                             .ToList();
+            //foreach (var order in first3orders) { Console.WriteLine(order); }
+
+            #endregion
+
+            #region 2.Get all but the first 2 orders from customers in Stavern.
+
+            //var allBut2= CustomerList.Where(c=>c.City== "Stavern")
+            //                         .SelectMany(c=>c.Orders)
+            //                         .Skip(2)
+            //                         .ToList();
+            //foreach(var c in allBut2) { Console.WriteLine(c); }
+
+            #endregion
+
+            #region  3.Return elements starting from the beginning of the array until a number is hit that is less than its position in the array.
+            //int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var numInPos = numbers.TakeWhile((num, index) => num >= index);
+
+            //foreach (int num in numInPos) { Console.WriteLine(num); }
+
+
+            #endregion
+
+            #region  4.Get the elements of the array starting from the first element divisible by 3.
+            //int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+
+            //var divisibleByThree = numbers.SkipWhile(n => n % 3 != 0);
+
+            //foreach (int n in divisibleByThree) { Console.WriteLine(n); }
+
+            #endregion
+
+            #region  5.Get the elements of the array starting from the first element less than its position.
+            //int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+
+            //var result = numbers.SkipWhile((c, i) => c >i);
+
+            //foreach ( var num in result) { Console.WriteLine(num); }
+
+            #endregion   
             #endregion
 
         }
